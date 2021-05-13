@@ -1,0 +1,29 @@
+---
+title: "Semester-Project2"
+author: "Shawn Vizgan"
+date: "5/12/2021"
+output: html_document
+---
+
+While not the intense focus of a statistics class, data visualization is super important when it comes to showing our results and the way our readers are able to understand our results. Let's talk about some nifty features of Ggplot2.
+
+Let's start with a basic table, in this case a rating of different ice flavors.
+
+
+```{r}
+icecreams <-data.frame("IcecreamName" = c("Vanilla","Chocolate","Strawberry"),"FlavorRating" = c(80,40,60) )
+
+table(icecreams)
+```
+
+Now, this is probably one of the most basic ways of presenting our ratings, but they're rather basic. Let's start with making our ratings into a bar graph using ggplot2.
+
+```{r}
+library(ggplot2)
+
+ggplot(icecreams, aes(x=IcecreamName, y= "FLavorRating" )) +
+  geom_bar(stat="identity")
+
+
+
+```
