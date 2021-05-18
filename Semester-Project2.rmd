@@ -53,7 +53,7 @@ Let's try putting this through ggplot2:
 
 # plot the means
 ggplot(means_df, aes(x=feed, y=means, color = feed)) +
-  geom_bar(stat="identity") +theme_minimal()
+  geom_bar(stat="identity") +theme_minimal() 
 
 
 
@@ -89,4 +89,14 @@ ggplot(data=df, aes(x=dose, y=len, group=1)) +
   geom_point()
 
 
+```
+
+
+How to plot multiple independent variables:
+
+```{r}
+
+ggplot(data = economics, aes(x = date, y = psavert))+
+  geom_line(aes(y = psavert), color = "darkred") + 
+  geom_line(aes(y = uempmed), color="steelblue", linetype="twodash")
 ```
