@@ -5,4 +5,13 @@ date: "5/17/2021"
 output: html_document
 ---
 
-While not 
+While it may not seem like the most important part of statistics, data visualization is actually super vital to the understanding of statistics by other scientists and everyday people alike. While the computation of various statistics is important work, the various forms of presentation can allow the products of sometimes complex designs and to be understood simply and quickly. While R has its own basic graphing tools, we will be looking at GGplot2 and it's various options.
+
+```{r}
+library(ggplot2)
+
+ggplot(mpg, aes(displ, hwy, colour = class)) + 
+  geom_point()
+
+
+```
