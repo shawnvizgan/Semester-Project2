@@ -150,60 +150,79 @@ ggplot(fake_data, aes(x=IV1, y=DV, group=IV2, color = IV2))+
 
 
 ```
-
+It is also possible to code directly into the geom_line function instead of the aes function.This ends up grouping qualities around the lines themselves but not the points.
 
 
 
 ```{r}
+ggplot(fake_data, aes(x=IV1, 
+                      y=DV))+
+  geom_point(shape = "square")+
+  geom_line(aes(color=IV2,
+                group=IV2,
+                linetype=IV2))
+
+```
+Coding for 3 factors is similar to before, except we have to counter balance for yet another level of variables. It is also possible to hard code directly into tribble for how you want your design to look.Some final touches can be added such as adding your own title, adding a legend to differentiate variables.
+
+```{r}
+
+fake_data <- tribble(~IV1, ~IV2, ~IV3, ~DV,
+                     "1A", "2A", "3A", 3,
+                     "1A", "2A", "3B", 5,
+                     "1A", "2B", "3A", 2,
+                     "1A", "2B", "3B", 6,
+                     "1B", "2A", "3A", 4,
+                     "1B", "2A", "3B", 7,
+                     "1B", "2B", "3A", 8,
+                     "1B", "2B", "3B", 9,
+                     "1C", "2A", "3A", 1,
+                     "1C", "2A", "3B", 1,
+                     "1C", "2B", "3A", 3,
+                     "1C", "2B", "3B", 7
+                     )
 
 ggplot(fake_data, aes(x=IV1, 
                       y=DV, 
                       color=IV2,
                       group=IV2,
-                      linetype=IV2))+
-  geom_point()+
-  geom_line()
+                      linetype=IV2,
+                      shape=IV1))+
+  geom_line(size=1)+
+  geom_point(size=5, color="black")+
+  geom_point(size=4)+
+  theme_classic(base_size = 12)+
+  ggtitle("the title of my graph") +
+  xlab("x axis label") +
+  ylab("y label") +
+  coord_cartesian(ylim = c(-1,10))+
+  geom_hline(yintercept = 0, color="grey")+
+  facet_wrap(~IV3)
 
 ```
 
 
-
-
-
-```{r}
-df <- data.frame(dose=c("D0.5", "D1", "D2"),
-                len=c(4.2, 10, 29.5))
-head(df)
-""
-# Basic line plot with points
-ggplot(data=df, aes(x=dose, y=len, group=1)) +
-  geom_line()+
-  geom_point()
-# Change the line type
-ggplot(data=df, aes(x=dose, y=len, group=1)) +
-  geom_line(linetype = "dashed")+
-  geom_point()
-# Change the color
-ggplot(data=df, aes(x=dose, y=len, group=1)) +
-  geom_line(color="green")+
-  geom_point()
-
-
 ```
+A final helpful conceptual feature to add would be on when to choose between bar graphs and line graphs. Line graphs are most commonly used when trying to portray data in ways to show trends across time, typically data that has some sort of fluctuation. Bar graphs on the other hand are used for group differences, mean comparisons, and showing off "facts." That being said, the same data can be portrayed as both line graphs and bar graphs depending on how you code the data, and for the most part it comes down to personal choice on which you choose. The specifc rules for bar graph are to use them for concrete rather than continuous variables (hence categories versus many times of day) for the sake of having a clear and comprehensive bar graph.
 
 
-How to plot multiple independent variables:
 
-```{r}
 
-ggplot(data = economics, aes(x = date, y = psavert))+
-  geom_line(aes(y = psavert), color = "darkred") + 
-  geom_line(aes(y = uempmed), color="steelblue", linetype="dotdash")
-```
 
 
 Practice Problems:
 
-1) For a dataset, explain when you'd choose a bargraph/linegraph over the other and why.
+1) Make a line or bar graph for a dataset with 2 independent variables, with 2 different colors.
 
-2) Make a linegraph for a dataset with 2 independent variables, with 2 different colors and line types.
+```{r}
+library(ggplot2)
+
+new_data <- tibble(Noise_type = rep(c("No noise","Interval Noise","Continuous Noise"), each=2),
+                    Subjects = as.factor(rep(c(1,2),3)),
+                    RXtime = c(300,600,500,300,400,600))
+                    
+                    
+ggplot(fake_data, aes(x=Noise_type, y=RXtime, fill=Subjects))+
+  geom_bar(stat='identity', position="dodge")
+  
+```
