@@ -200,13 +200,7 @@ ggplot(fake_data, aes(x=IV1,
   facet_wrap(~IV3)
 
 ```
-
-
-```
 A final helpful conceptual feature to add would be on when to choose between bar graphs and line graphs. Line graphs are most commonly used when trying to portray data in ways to show trends across time, typically data that has some sort of fluctuation. Bar graphs on the other hand are used for group differences, mean comparisons, and showing off "facts." That being said, the same data can be portrayed as both line graphs and bar graphs depending on how you code the data, and for the most part it comes down to personal choice on which you choose. The specifc rules for bar graph are to use them for concrete rather than continuous variables (hence categories versus many times of day) for the sake of having a clear and comprehensive bar graph.
-
-
-
 
 
 
@@ -220,10 +214,8 @@ Practice Problems:
 New_data <- tibble(IV1 = rep(c("A","B","C"), each=2),
                     IV2 = as.factor(rep(c(1,2),3)),
                     DV = c(43,52,65,24,50,43))
-ggplot(new_data, aes(x=IV1, y=DV, fill=IV2))+
+ggplot(New_data, aes(x=IV1, y=DV, fill=IV2))+
   geom_bar(stat='identity', position="dodge")
-  
-  
   
   
   
