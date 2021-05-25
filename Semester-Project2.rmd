@@ -215,14 +215,17 @@ Practice Problems:
 1) Make a line or bar graph for a dataset with 2 independent variables, with 2 different colors.
 
 ```{r}
-library(ggplot2)
 
-new_data <- tibble(Noise_type = rep(c("No noise","Interval Noise","Continuous Noise"), each=2),
-                    Subjects = as.factor(rep(c(1,2),3)),
-                    RXtime = c(300,600,500,300,400,600))
-                    
-                    
-ggplot(fake_data, aes(x=Noise_type, y=RXtime, fill=Subjects))+
+
+New_data <- tibble(IV1 = rep(c("A","B","C"), each=2),
+                    IV2 = as.factor(rep(c(1,2),3)),
+                    DV = c(43,52,65,24,50,43))
+ggplot(new_data, aes(x=IV1, y=DV, fill=IV2))+
   geom_bar(stat='identity', position="dodge")
+  
+  
+  
+  
+  
   
 ```
