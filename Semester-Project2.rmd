@@ -27,54 +27,154 @@ Practical section
   In this example, the base functions for making graphs in R aren't that aesthetically pleasing.
   
 ```{r}
-# load libraries
+
 library(dplyr)
 library(ggplot2)
-
-# chickwts is a built in data set
-# with chick weights by feed
-
-# calculate means for each feed type
 means_df <- chickwts %>%
   group_by(feed) %>%
   summarize(means = mean(weight))
 
-# print table of means
-knitr::kable(means_df)
 
 plot(means_df)
 
 ```
 
-Let's try putting this through ggplot2:
+Let's try putting this through ggplot2, and specifically let's use a bar graph:
+
+```{r}
+library(ggplot2)
+
+
+
+# plot the means
+ggplot(means_df, aes(x=feed, y=means)) +
+  geom_bar(stat="identity")
+
+```
+Bar graphs are one super common way to present your information. They are especially useful when highlighting differences between groups and categorical information. More info on bargraphs will be included in our conceptual section.These means come from one of the datasets available in ggplot2, but you can make your own data sets too for your bargraphs in R. There are many types of functions one can use to make data frames to base your graph around, and we will be using tibble. 
+
+
+```{r}
+library(tibble)
+library(ggplot2)
+
+
+# one factor three levels
+fake_data <- tibble(IV1 = c("A","B","C"),
+                    DV = c(3,6,5))
+
+
+ggplot(fake_data, aes(x=IV1, y=DV))+
+  geom_bar(stat='identity')
+
+```
+This is quite the barebones graph right now, but there are plenty of ways to spruce them up and modify what you're working with. One basic option is to add color. Within the aes part of the ggplot code, after adding in your x and y variables, you have the choice between "fill" and "color" which will affect your presentation's color choices. Fill corresponds to the inside of the bar whereas using only the color option changes just the bar's outline (it tripped me up the first time I encountered it too).
 
 ```{r}
 
 
-# plot the means
-ggplot(means_df, aes(x=feed, y=means, color = feed)) +
-  geom_bar(stat="identity") +theme_minimal() 
+ggplot(fake_data, aes(x=IV1, y=DV, fill=IV1))+
+  geom_bar(stat='identity', color="black")
+
+ggplot(fake_data, aes(x=IV1, y=DV, color=IV1))+
+  geom_bar(stat='identity', color="green")
+
+
+```
+Thus, we have a basic working bargraph, but this may not be helpful for all designs and all forms of data. While we have our bars and their associated values, (and these are a good stand in for mean values we would see in the wild) not all data will be able to suit presentaion as bar graphs. Hence let us quickly present how to make line graphs in ggplot2 as well. That being said it is not as simple as just switching out geom_bar for geom_point as unlike in the bar graphs, line graphs need to be grouped together (hence the group=1 part of the code).
+
+```{r}
+
+ggplot(fake_data, aes(x=IV1, y=DV, group=1))+
+  geom_point()+
+  geom_line()
+
+```
+
+Some ways to liven up your bar graphs include changing the color and/or changing the way the lines look. Within the geom_point function you can play around with how the points look, whereas in geom_line you can change the colors and or line type as needed.
+For your line graphs, “blank”, “solid”, “dashed”, “dotted”, “dotdash”, “longdash”, “twodash” are all options to choose from when it com es to how you want your line graph information to look. 
+
+```{r}
+
+ggplot(fake_data, aes(x=IV1, y=DV, group=1))+
+  geom_point(shape = "triangle"
+)+
+  geom_line(color="blue")
 
 
 
+ggplot(fake_data, aes(x=IV1, y=DV, group=1))+
+  geom_point()+
+  geom_line(linetype = "dashed")
 
 
+```
+Practical section:
+
+The previous examples show some basic steps toward graph design, however a paltry 3 data points aren't enough towards representing how to model your data. Hence, here is how one should creathe multiple independent variables to graph, starting with just two. When making a balanced design, make sure to account for all separate conditions and counter balance them. For instance, we have 2 sets of 3 variables A, B, and C, and likewise we have 3 sets of alternating 1s and 2s.
 
 
+``` {r}
 
+fake_data <- tibble(IV1 = rep(c("A","B","C"), each=2),
+                    IV2 = rep(c(1,2),3),
+                    DV = c(3,6,5,3,4,6))
+
+ggplot(fake_data, aes(x=IV1, y=DV, color = IV2))+
+  geom_point()
+
+```
+When making barpgraphs, there is a choice between having stacked versus side by side versions of your bars. The choice between the two is yours, however typically to differentiate conditions better having them side by side is more common. Simply add position = dodged inside the geom_bar part of the function.
+
+```{r}
+ggplot(fake_data, aes(x=IV1, y=DV, fill=IV2))+
+  geom_bar(stat='identity')
+
+ggplot(fake_data, aes(x=IV1, y=DV, fill=IV2))+
+  geom_bar(stat='identity', position="dodge")
+
+```
+When making a line graph, it is important to differentiate how you want your bar graph to identify its groupings between variable conditions, as otherwise it will simply look like random dots like in the points previously shown. How you code your colors whether inside a geom_line variable versus inside the aes function has different effects as well, depending on how you want to portray your data. It is especially advisable to add some sort of color or line style difference between graphs for the ease of view (unless you enjoy confusing your readers).
+
+```{r}
+
+
+# color depends on whether the IV is coded as a factor
+fake_data <- tibble(IV1 = rep(c("A","B","C"), each=2),
+                    IV2 = as.factor(rep(c(1,2),3)),
+                    DV = c(3,6,5,3,4,6))
+
+ggplot(fake_data, aes(x=IV1, y=DV, group=IV2, color = IV2))+
+  geom_point()+
+  geom_line()
 
 
 ```
 
 
-For linegraphs, “blank”, “solid”, “dashed”, “dotted”, “dotdash”, “longdash”, “twodash” are all options to choose from when it comes to how you want your line graph information to look. 
+
+
+```{r}
+
+ggplot(fake_data, aes(x=IV1, 
+                      y=DV, 
+                      color=IV2,
+                      group=IV2,
+                      linetype=IV2))+
+  geom_point()+
+  geom_line()
+
+```
+
+
+
 
 
 ```{r}
 df <- data.frame(dose=c("D0.5", "D1", "D2"),
                 len=c(4.2, 10, 29.5))
 head(df)
-
+""
 # Basic line plot with points
 ggplot(data=df, aes(x=dose, y=len, group=1)) +
   geom_line()+
@@ -98,5 +198,12 @@ How to plot multiple independent variables:
 
 ggplot(data = economics, aes(x = date, y = psavert))+
   geom_line(aes(y = psavert), color = "darkred") + 
-  geom_line(aes(y = uempmed), color="steelblue", linetype="twodash")
+  geom_line(aes(y = uempmed), color="steelblue", linetype="dotdash")
 ```
+
+
+Practice Problems:
+
+1) For a dataset, explain when you'd choose a bargraph/linegraph over the other and why.
+
+2) Make a linegraph for a dataset with 2 independent variables, with 2 different colors and line types.
